@@ -41,10 +41,11 @@
 - [x] 아이콘: icon.ico(멀티사이즈), tray.png, 오버레이 뱃지 1~9·9+
 - [x] npm install + `npm start` 스모크 테스트 (타이틀·SPA 라우팅 확인. 주의: VSCode 계열 터미널에서 실행 시 `ELECTRON_RUN_AS_NODE` 제거 필요)
 - [x] skoolclass-pro AppLayout 브릿지 추가 + 타입체크 (웹 배포는 별도)
-- [ ] GitHub 리포 생성(RosemontAcademy/SkoolClass-App, public) + 푸시
-- [ ] electron-builder 설치본 빌드
-- [ ] v1.0.0 릴리즈 업로드 (exe + latest.yml + blockmap)
+- [x] GitHub 리포 생성(RosemontAcademy/SkoolClass-App, public) + 푸시
+- [x] electron-builder 설치본 빌드
+- [x] v1.0.0 릴리즈 업로드 (exe + latest.yml + blockmap)
 - [ ] 실제 PC 설치 테스트: 로그인 유지 / 뱃지 / 트레이 / 알림 / 자동 업데이트(1.0.1 올려서 확인)
+  - 확인 항목: 첫 실행 시 구글 로그인 창이 뜨는 현상 재현 여부 (dev 스모크 테스트에서 1회 관찰)
 - [ ] 선생님 설치 안내문 (SmartScreen 스크린샷 포함)
 
 ## 릴리즈 절차 (쉘 업데이트 시)
