@@ -16,6 +16,7 @@ const INTERNAL_HOST_SUFFIXES = [
   'skoolclass.vercel.app',
   'supabase.co',
   'google.com',
+  'accounts.youtube.com', // Google sign-in bounces through here for session sync
   'kakao.com',
   'daum.net',
   'naver.com',
@@ -97,6 +98,23 @@ function createWindow() {
       win.hide();
     }
   });
+
+  // Tray residency keeps one SPA instance alive for days, so web deploys
+  // wouldn't reach the app until a manual restart. Refresh after long hidden
+  // stretches; a visible window is never interrupted (no draft loss).
+  const RELOAD_AFTER_HIDDEN_MS = 4 * 60 * 60 * 1000;
+  let hiddenAt = null;
+  win.on('hide', () => { hiddenAt = Date.now(); });
+  win.on('show', () => {
+    if (hiddenAt && Date.now() - hiddenAt >= RELOAD_AFTER_HIDDEN_MS) win.webContents.reload();
+    hiddenAt = null;
+  });
+  setInterval(() => {
+    if (hiddenAt && Date.now() - hiddenAt >= 24 * 60 * 60 * 1000) {
+      win.loadURL(APP_URL);
+      hiddenAt = Date.now(); // re-arm: refresh again tomorrow if still hidden
+    }
+  }, 30 * 60 * 1000);
 
   win.webContents.setWindowOpenHandler(({ url }) => {
     if (isInternalUrl(url)) return { action: 'allow' };
