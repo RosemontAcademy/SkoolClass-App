@@ -56,6 +56,7 @@ if (!app.requestSingleInstanceLock()) {
     createTray();
     setupAutoUpdate();
     ipcMain.on('skool:badge', (_e, n) => setBadge(Number(n) || 0));
+    ipcMain.on('skool:show', () => showWindow());
   });
 
   app.on('before-quit', () => { isQuitting = true; });

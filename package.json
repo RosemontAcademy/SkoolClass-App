@@ -1,7 +1,7 @@
 {
   "name": "skoolclass-app",
   "productName": "SkoolClass",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "SkoolClass desktop shell — Rosemont Academy staff console",
   "main": "src/main.js",
   "author": "Rosemont Academy",
