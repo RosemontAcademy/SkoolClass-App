@@ -6,6 +6,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('skoolDesktop', {
   shell: 'electron',
   setBadge: (count) => ipcRenderer.send('skool:badge', count),
+  openExternal: (url) => ipcRenderer.send('skool:open-external', url),
   // Notification click: surface the window even when hidden in the tray
   // (window.focus() can't un-hide a tray-resident window).
   showWindow: () => ipcRenderer.send('skool:show'),

@@ -10,17 +10,21 @@ const APP_URL = 'https://skoolclass.vercel.app';
 const ASSETS = path.join(__dirname, '..', 'assets');
 
 // Hosts allowed to load inside the app window/popups. Everything else opens in
-// the default browser. The auth suffixes must stay internal so OAuth redirects
-// and the widget-preview social-login popups (postMessage back) can complete.
+// the default browser. Google OAuth must never stay inside Electron because
+// Google rejects embedded user agents on managed/new Windows installs.
 const INTERNAL_HOST_SUFFIXES = [
   'skoolclass.vercel.app',
   'supabase.co',
-  'google.com',
-  'accounts.youtube.com', // Google sign-in bounces through here for session sync
   'kakao.com',
   'daum.net',
   'naver.com',
 ];
+
+const EXTERNAL_AUTH_HOSTS = new Set([
+  'accounts.google.com',
+  'kauth.kakao.com',
+  'nid.naver.com',
+]);
 
 function isInternalUrl(url) {
   try {
@@ -57,9 +61,21 @@ if (!app.requestSingleInstanceLock()) {
     setupAutoUpdate();
     ipcMain.on('skool:badge', (_e, n) => setBadge(Number(n) || 0));
     ipcMain.on('skool:show', () => showWindow());
+    ipcMain.on('skool:open-external', (_e, url) => openExternalUrl(url));
   });
 
   app.on('before-quit', () => { isQuitting = true; });
+}
+
+function openExternalUrl(url) {
+  try {
+    const parsed = new URL(String(url));
+    if (parsed.protocol !== 'https:') return;
+    if (!EXTERNAL_AUTH_HOSTS.has(parsed.hostname)) return;
+    shell.openExternal(parsed.toString());
+  } catch {
+    // ignore malformed URLs from the page bridge
+  }
 }
 
 function showWindow() {
